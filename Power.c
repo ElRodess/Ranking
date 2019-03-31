@@ -47,6 +47,7 @@ MatCreuse* read_fiche(int *n,int *m){
 
 	FILE* file=NULL;
 	file = fopen("web2.txt","r");
+	//~ file = fopen("Stanford.txt","r");
 	//file = fopen("in-2004v2.txt","r");
 
 	if(file!= NULL) {
@@ -127,7 +128,7 @@ void ranking_matM(MatCreuse* tableau_arrive, int n){
 		}//printf("\n");
 
 		for(j=0;j<(n);j++){
-			norme+=valeur_absolue(pi_pre[j],pi_suiv[j]);
+			norme += valeur_absolue(pi_pre[j],pi_suiv[j]);
 		}
 	//	printf("ite:%d norme: %.10f\n",compteur,norme);
 		compteur++;
@@ -208,11 +209,11 @@ void ranking_matG(MatCreuse* tableau_arrive,int* E,int n){
 		//printf("ite:%d norme: %.10f\n",compteur,norme);
 		compteur++;
 	} 
-	printf("Pertinence finales : \n");
-	for(j=0;j<(n);j++){ 
-		printf("%f \n",pi_suiv[j]);
-	}
-	printf("fin \n");
+	//~ printf("Pertinence finales : \n");
+	//~ for(j=0;j<(n);j++){ 
+		//~ printf("%f \n",pi_suiv[j]);
+	//~ }
+	//~ printf("fin \n");
 	printf("ite:%d norme: %.10f\n",compteur,norme);
 	free(pi0);
 	free(pi_pre);
@@ -233,8 +234,9 @@ void Projection(double* pi_k, double* pi_k_moins1, double* pi_k_moins2,int n)
 	{
 		tmp = (pi_k_moins1[i] - pi_k_moins2[i]);
 		g = tmp * tmp;
-		h = pi_k[i]-(2*pi_k_moins1[i]) + pi_k_moins2[i];	
-		pi_k[i] =  pi_k[i] - (g/h);
+		h = pi_k[i]-(2*pi_k_moins1[i]) + pi_k_moins2[i];
+		//if(h != 0 && pi_k[i] > (g/h))
+			pi_k[i] =  pi_k[i] - (g/h);
 	}	
 }
 
@@ -262,8 +264,13 @@ void Aitken(MatCreuse* tableau_arrive,int* E, int n){
 			if(k >=2){
 				pi_k_moins2[i] = pi_k_moins1[i];
 			}
-			if(k==1) pi_k_moins1[i] = pi_0[i];	
-			else pi_k_moins1[i] = pi_k[i];
+			if(k==1){
+				pi_k_moins1[i] = pi_0[i];	
+			}
+			else 
+			{
+				pi_k_moins1[i] = pi_k[i];
+			}
 			pi_k[i]=0.0;
 		}
 
@@ -286,22 +293,135 @@ void Aitken(MatCreuse* tableau_arrive,int* E, int n){
 			pi_k[j] = alpha*tmp[j] + (1.0-alpha)*(1.0/n) + alpha*deta*(1.0/n);
 			//printf("pi_suiv[%d]:%f ",j,pi_suiv[j]);
 		}
+		
 		for(j=0;j<(n);j++){
 			norme+=valeur_absolue(pi_k_moins1[j],pi_k[j]);
 		}
 		
-		if(k%8  == 0) Projection(pi_k,pi_k_moins1,pi_k_moins2,n);	//on est censé acceler periodiquement
-		
+		if(k  == 20){
+			Projection(pi_k,pi_k_moins1,pi_k_moins2,n);	//on est censé acceler periodiquement
+			 printf("ite:%d norme: %f\n",k,norme);	//on est censé acceler periodiquement
+		}
+		if(k == 21) printf("ite:%d norme: %f\n",k,norme);
 		
 		//printf("ite:%d norme: %f\n",k,norme);
 		k++;
 	}
-	printf("Pertinence finales : \n");
-	for(j=0;j<(n);j++){ 
-		printf("%f \n",pi_k[j]);
+	//~ printf("Pertinence finales : \n");
+	//~ for(j=0;j<(n);j++){ 
+		//~ printf("%f \n",pi_k[j]);
+	//~ }
+	//~ printf("fin \n");
+	printf("ite:%d norme: %.10f\n",k,norme);
+	free(pi_0);
+	free(pi_k);
+	free(pi_k_moins1);
+	free(pi_k_moins2);
+	free(tmp);
+}
+
+
+void ProjectionQuadratique(double* pi_k, double* pi_k_moins1, double* pi_k_moins2,double* pi_k_moins3,int n)
+{
+	double *y_k = (double*) malloc((n)*sizeof(double)+1);
+	double* y_k_moins1 = (double*) malloc((n)*sizeof(double)+1);
+	double* y_k_moins2 = (double*) malloc((n)*sizeof(double)+1);
+	double Beta0,Beta1,Beta2;
+	double Gamma0,Gamma1,Gamma2,Gamma3;
+	int i,j;
+	for(i=0;i<n;i++)
+	{
+/*--------------------------------------------------------------*/
+		y_k[i] = pi_k[i] - pi_k_moins3[i];
+		y_k_moins1[i] = pi_k_moins1[i] - pi_k_moins3[i];
+		y_k_moins2[i] = pi_k_moins2[i] - pi_k_moins3[i];
+/*--------------------------------------------------------------*/		
+	Gamma3 = 1;
+	Gamma1 = y_k_moins1[i] * y_k[i]; 
+	Gamma2 = y_k_moins2[i] * y_k[i];
+	Beta0 = Gamma1 + Gamma2 + Gamma3 ;
+	Beta1 = Gamma2 + Gamma3;
+	Beta2 = Gamma3;
+	pi_k[i] = (Beta0 * pi_k_moins2[i] ) + (Beta1 * pi_k_moins1[i] )+(Beta2 * pi_k[i]);
 	}
-	printf("fin \n");
-	printf("ite:%d norme: %f\n",k,norme);
+}
+
+void AitkenQuadratique(MatCreuse* tableau_arrive,int* E, int n){
+	double norme=1.0;
+	double *pi_0 = (double*) malloc((n)*sizeof(double)+1);
+	double *pi_k = (double*) malloc((n)*sizeof(double)+1);
+	double *pi_k_moins1 = (double*) malloc((n)*sizeof(double)+1);
+	double *pi_k_moins2 = (double*) malloc((n)*sizeof(double)+1);
+	double *pi_k_moins3 = (double*) malloc((n)*sizeof(double)+1);
+	double *tmp = (double*) malloc((n)*sizeof(double)+1);
+	double deta;
+	MatCreuse temp;
+	
+	int i,j,t;
+	int k=1;
+	// Init P°0
+	for(i=0;i<(n);i++){
+		pi_0[i] = 1.0/(n);
+	}	
+	while(norme > epsilon)
+	{		
+		deta=0.0;
+		norme=0.0;
+		for(i=0;i<(n);i++){
+			if(k>=3){
+				pi_k_moins3[i] = pi_k_moins2[i];
+			}
+			if(k >=2){
+				pi_k_moins2[i] = pi_k_moins1[i];
+			}
+			if(k==1){
+				pi_k_moins1[i] = pi_0[i];	
+			}
+			else 
+			{
+				pi_k_moins1[i] = pi_k[i];
+			}
+			pi_k[i]=0.0;
+		}
+
+		for(i=0;i<(n);i++){
+			deta+=pi_k_moins1[i]*E[i];
+		}
+		for(j=0;j<(n);j++){ 
+			tmp[j]=0.0;
+			temp = tableau_arrive[j];
+			while(temp != NULL){
+				if(j==temp->colonne-1){
+					//~ pi_k[j] += pi_k_moins1[temp->ligne-1]*(double)temp->proba;
+					tmp[j] += pi_k_moins1[temp->ligne-1]*(double)temp->proba;
+				}
+
+				temp = temp->suiv;
+			}  
+			//printf(" tmp[%d]:%f ",j,tmp[j]);
+
+			pi_k[j] = alpha*tmp[j] + (1.0-alpha)*(1.0/n) + alpha*deta*(1.0/n);
+			//printf("pi_suiv[%d]:%f ",j,pi_suiv[j]);
+		}
+		
+		for(j=0;j<(n);j++){
+			norme+=valeur_absolue(pi_k_moins1[j],pi_k[j]);
+		}
+		
+		if(k ==20){
+			 ProjectionQuadratique(pi_k,pi_k_moins1,pi_k_moins2,pi_k_moins3,n);
+			 printf("ite:%d norme: %f\n",k,norme);	//on est censé acceler periodiquement
+		}
+		if(k == 21) printf("ite:%d norme: %f\n",k,norme);
+		//printf("ite:%d norme: %f\n",k,norme);
+		k++;
+	}
+	//~ printf("Pertinence finales : \n");
+	//~ for(j=0;j<(n);j++){ 
+		//~ printf("%f \n",pi_k[j]);
+	//~ }
+	//~ printf("fin \n");
+	printf("ite:%d norme: %.10f\n",k,norme);
 	free(pi_0);
 	free(pi_k);
 	free(pi_k_moins1);
@@ -318,6 +438,8 @@ int main(int argc, char *argv[]){
 	clock_t start1, finish1;
 	clock_t start2, finish2;
 	clock_t start3, finish3;	
+	clock_t start4, finish4;	
+	
 	// lecture graphe etc 
 	tableau_arrive = read_fiche(&n,&m);
 	
@@ -344,7 +466,7 @@ int main(int argc, char *argv[]){
 	printf("\n<<< Methode Power >>>\n");
 	start1 = clock();
 
-	ranking_matM(tableau_arrive, n);
+	//~ ranking_matM(tableau_arrive, n);
 
 	finish1= clock();
 	printf( "\n%f seconds\n", (double)(finish1-start1) / CLOCKS_PER_SEC);
@@ -365,6 +487,15 @@ int main(int argc, char *argv[]){
 
 	finish3 = clock();
 	printf( "\n%f seconds\n", (double)(finish3-start3) / CLOCKS_PER_SEC);
+	
+	
+	printf("\n<<< Methode Aitken Quatrique>>>\n");
+	start4 = clock();
+
+	AitkenQuadratique(tableau_arrive,E,n);
+
+	finish4 = clock();
+	printf( "\n%f seconds\n", (double)(finish4-start4) / CLOCKS_PER_SEC);
 	
 	free(tableau_arrive);
 	free(E);
