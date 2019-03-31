@@ -337,8 +337,8 @@ void ProjectionQuadratique(double* pi_k, double* pi_k_moins1, double* pi_k_moins
 		y_k_moins2[i] = pi_k_moins2[i] - pi_k_moins3[i];
 /*--------------------------------------------------------------*/		
 	Gamma3 = 1;
-	Gamma1 = y_k_moins1[i] * y_k[i]; 
-	Gamma2 = y_k_moins2[i] * y_k[i];
+	Gamma2 = (-y_k_moins1[i]) * y_k[i]; 
+	Gamma1 = (-y_k_moins2[i]) * y_k[i];
 	Beta0 = Gamma1 + Gamma2 + Gamma3 ;
 	Beta1 = Gamma2 + Gamma3;
 	Beta2 = Gamma3;
