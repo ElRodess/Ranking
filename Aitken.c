@@ -1,19 +1,33 @@
 #include "Aitken.h"
 #include "Graphe.h"
+
+void copie(double* pi_k,double* tmp,int n)
+{
+	for(int i = 0 ; i < n ; i++)
+	{
+		pi_k[i] = tmp[i];
+	}
+}
+
 void Projection(double* pi_k, double* pi_k_moins1, double* pi_k_moins2,int n)
 {
 	double g = 0;
 	double h = 0;
-	double tmp = 0;
+	double tmp1 = 0;
+	double* tmp = (double*) malloc((n)*sizeof(double)+1);
 	int i = 0 ;
 	for(i = 0 ; i < n ; i++)
 	{
-		tmp = (pi_k_moins1[i] - pi_k_moins2[i]);
-		g = tmp * tmp;
+		tmp1 = (pi_k_moins1[i] - pi_k_moins2[i]);
+		g = tmp1 * tmp1;
 		h = pi_k[i]-(2*pi_k_moins1[i]) + pi_k_moins2[i];
-		//if(h != 0 && pi_k[i] > (g/h))
-			pi_k[i] =  pi_k[i] - (g/h);
+		if (!(h != 0 && pi_k[i] > (g/h)))
+		{
+			return;
+		}
+		tmp[i] =  pi_k[i] - (g/h);
 	}	
+	copie(pi_k,tmp,n);
 }
 
 void Aitken(MatCreuse* tableau_arrive,int* E, int n){
@@ -74,11 +88,11 @@ void Aitken(MatCreuse* tableau_arrive,int* E, int n){
 			norme+=valeur_absolue(pi_k_moins1[j],pi_k[j]);
 		}
 		
-		if(k  == 20){
+		if(k  == 15){
 			Projection(pi_k,pi_k_moins1,pi_k_moins2,n);	//on est censé acceler periodiquement
 			 printf("ite:%d norme: %.10f\n",k,norme);	//on est censé acceler periodiquement
 		}
-		if(k == 21) {
+		if(k == 16) {
 			printf("ite:%d norme: %.10f\n",k,norme);
 			
 		}

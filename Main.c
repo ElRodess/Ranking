@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
 	printf("\n<<< Methode Aitken Quatrique>>>\n");
 	start4 = clock();
 
-	AitkenQuadratique(tableau_arrive,E,n);
+	//~ AitkenQuadratique(tableau_arrive,E,n);
 
 	finish4 = clock();
 	printf( "\n%f seconds\n", (double)(finish4-start4) / CLOCKS_PER_SEC);

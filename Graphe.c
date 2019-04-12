@@ -43,8 +43,8 @@ MatCreuse* read_fiche(int *n,int *m,char* fichier){
 
 	FILE* file=NULL;
 	file = fopen("./graphes/web2.txt","r");
-	//~ file = fopen("Stanford.txt","r");
-	//file = fopen("in-2004v2.txt","r");
+	//~ file = fopen("./graphes/Stanford.txt","r");
+	//~ file = fopen("./graphes/in-2004v2.txt","r");
 
 	if(file!= NULL) {
 		fscanf(file, "%d", n);
