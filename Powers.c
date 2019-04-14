@@ -128,11 +128,11 @@ void ranking_matG(MatCreuse* tableau_arrive,int* E,int n){
 		//printf("ite:%d norme: %.10f\n",compteur,norme);
 		compteur++;
 	} 
-	//~ printf("Pertinence finales : \n");
-	//~ for(j=0;j<(n);j++){ 
-		//~ printf("%f \n",pi_suiv[j]);
-	//~ }
-	//~ printf("fin \n");
+	printf("Pertinence finales : \n");
+	for(j=0;j<(n);j++){ 
+		printf("%f \n",pi_suiv[j]);
+	}
+	printf("fin \n");
 	printf("ite:%d norme: %.10f\n",compteur,norme);
 	free(pi0);
 	free(pi_pre);
