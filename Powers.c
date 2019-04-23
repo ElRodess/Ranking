@@ -126,6 +126,7 @@ void ranking_matG(MatCreuse* tableau_arrive,int* E,int n){
 			norme+=valeur_absolue(pi_pre[j],pi_suiv[j]);
 		}
 		//printf("ite:%d norme: %.10f\n",compteur,norme);
+		//!!! remplacer par un fprintf pour faire graphe !!!
 		compteur++;
 	} 
 	printf("Pertinence finales : \n");

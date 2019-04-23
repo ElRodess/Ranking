@@ -12,7 +12,7 @@ $(EXEC) : $(OBJ)
 	
 
 #Compilation des .c
-Main.o : Graphe.h Powers.h Aitken.h AitkenQuad.h
+Main.o : Graphe.h Powers.h Aitken.h 
 
 %.o : %.c def.h
 	@gcc $(CFLAGS) -o $@ -c $< 

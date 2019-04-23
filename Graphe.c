@@ -1,15 +1,6 @@
-#define epsilon 1e-6
-#define alpha 0.85
+#define epsilon 1e-6 
+#define alpha 0.85 //!!! à faire varier pour données differentes !!!
 #include "Graphe.h"
-//~ struct matriceCreuse{
-	//~ float proba;
-	//~ int ligne;
-	//~ int colonne;
-	//~ struct matriceCreuse* suiv;
-//~ };
-
-//~ typedef struct matriceCreuse Element;
-//~ typedef Element* MatCreuse;
 
 MatCreuse ajout_matrice(MatCreuse mat,float proba, int i, int j){
 	Element* e = malloc(sizeof(Element));
@@ -42,8 +33,8 @@ MatCreuse* read_fiche(int *n,int *m,char* fichier){
 
 
 	FILE* file=NULL;
-	file = fopen("./graphes/web2.txt","r");
-	//~ file = fopen("./graphes/Stanford.txt","r");
+	//~ file = fopen("./graphes/web2.txt","r");
+	file = fopen("./graphes/Stanford.txt","r");
 	//~ file = fopen("./graphes/in-2004v2.txt","r");
 
 	if(file!= NULL) {
