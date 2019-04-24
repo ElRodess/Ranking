@@ -28,6 +28,23 @@ int main(int argc, char *argv[]){
 	{
 		periode = 30;
 	}
+	
+	if(argv[4] != NULL)
+	{
+		log_aitken = fopen(argv[4], "w");
+	}
+	else
+	{
+		log_aitken = fopen("log_aitken.data", "w");
+	}
+	if(argv[5] != NULL)
+	{
+		log_power = fopen(argv[5], "w");
+	}
+	else
+	{
+		log_power = fopen("log_power.data", "w");
+	}
 	//~ clock_t start1, finish1;
 	clock_t start2, finish2;
 	clock_t start3, finish3;	
@@ -82,4 +99,7 @@ int main(int argc, char *argv[]){
 	
 	free(tableau_arrive);
 	free(E);
+	
+	fclose(log_aitken);
+	fclose(log_power);
 }

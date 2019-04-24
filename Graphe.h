@@ -7,6 +7,8 @@
 #define __include_Graphe_h__
 #define epsilon 1e-6
 double alpha ;
+FILE* log_aitken;
+FILE* log_power;
 struct matriceCreuse{
 	float proba;
 	int ligne;

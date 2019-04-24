@@ -91,7 +91,7 @@ void Aitken(MatCreuse* tableau_arrive,int* E, int n){
 		if(k % periode == 0){
 			Projection(pi_k,pi_k_moins1,pi_k_moins2,n);	//on est censé acceler periodiquement
 		}
-		//printf("ite:%d norme: %f\n",k,norme); 
+		fprintf(log_aitken, "%d %.10f\n", k, norme); 
 		//!!! remplacer par un fprintf pour faire graphe !!!
 		k++;
 	}
