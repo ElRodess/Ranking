@@ -11,12 +11,29 @@ int main(int argc, char *argv[]){
 	int i;
 	MatCreuse* tableau_arrive = NULL;
 	int *E;
+	
+	if (argv[2] != NULL)
+	{
+		alpha = atof(argv[2]);
+	}
+	else 
+	{
+		alpha = 0.85;
+	}
+	if(argv[3] != NULL)
+	{
+		periode = atoi(argv[3]);
+	}
+	else
+	{
+		periode = 30;
+	}
 	//~ clock_t start1, finish1;
 	clock_t start2, finish2;
 	clock_t start3, finish3;	
 	
 	// lecture graphe etc 
-	tableau_arrive = read_fiche(&n,&m,argv[2]);
+	tableau_arrive = read_fiche(&n,&m,argv[1]);
 	
 	E = (int*) malloc((n)*sizeof(int)+1);
 
@@ -41,7 +58,7 @@ int main(int argc, char *argv[]){
 	//~ printf("\n<<< Methode Power >>>\n");
 	//~ start1 = clock();
 
-	ranking_matM(tableau_arrive, n);
+	//	ranking_matM(tableau_arrive, n);
 
 	//~ finish1= clock();
 	//~ printf( "\n%f seconds\n", (double)(finish1-start1) / CLOCKS_PER_SEC);

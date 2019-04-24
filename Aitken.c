@@ -88,17 +88,8 @@ void Aitken(MatCreuse* tableau_arrive,int* E, int n){
 			norme+=valeur_absolue(pi_k_moins1[j],pi_k[j]);
 		}
 		
-		if(k % 20 == 9){
-			printf("ite:%d norme: %.10f\n",k,norme);
-		}
-		
-		if(k % 20 == 0){
+		if(k % periode == 0){
 			Projection(pi_k,pi_k_moins1,pi_k_moins2,n);	//on est censé acceler periodiquement
-			 printf("ite:%d norme: %.10f\n",k,norme);	//on est censé acceler periodiquement
-		}
-		if(k % 20 == 1) {
-			printf("ite:%d norme: %.10f\n",k,norme);
-			
 		}
 		//printf("ite:%d norme: %f\n",k,norme); 
 		//!!! remplacer par un fprintf pour faire graphe !!!

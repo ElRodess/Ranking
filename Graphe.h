@@ -2,9 +2,11 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include <string.h>
-#define epsilon 1e-6
-#define alpha 0.85
+
+
 #define __include_Graphe_h__
+#define epsilon 1e-6
+double alpha ;
 struct matriceCreuse{
 	float proba;
 	int ligne;

@@ -1,5 +1,4 @@
-#define epsilon 1e-6 
-#define alpha 0.85 //!!! à faire varier pour données differentes !!!
+//!!! à faire varier pour données differentes !!!
 #include "Graphe.h"
 
 MatCreuse ajout_matrice(MatCreuse mat,float proba, int i, int j){
@@ -33,10 +32,7 @@ MatCreuse* read_fiche(int *n,int *m,char* fichier){
 
 
 	FILE* file=NULL;
-	//~ file = fopen("./graphes/web2.txt","r");
-	file = fopen("./graphes/Stanford.txt","r");
-	//~ file = fopen("./graphes/in-2004v2.txt","r");
-
+	file = fopen(fichier,"r");
 	if(file!= NULL) {
 		fscanf(file, "%d", n);
 		fscanf(file, "%d", m);
